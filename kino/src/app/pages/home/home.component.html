@@ -1,0 +1,10 @@
+<div class="bg-dark m-0">
+    <div class="text-center mb-5">
+        <img src="../../../assets/movie_therater_header_photo_3.jpg" class=" w-100">
+    </div>
+
+    <div class="container p-2">
+        <app-movie-element *ngFor="let projection of futureProjections" [projection]="projection" [isHome]="true"></app-movie-element>
+    </div>
+</div>
+

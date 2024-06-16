@@ -1,0 +1,23 @@
+<div class="vh-100 bg-dark m-0 " data-bs-theme="dark">
+    <div class="card position-absolute top-50 start-50 translate-middle" data-bs-theme="dark" style="width: 30rem; background-color: rgb(28, 28, 33);">
+        <div class="card-header text-center">
+            Login
+        </div>
+        <div class="card-body">
+            <form  (ngSubmit)="onSubmit()" [formGroup]=loginForm>
+                <div class="form-group">
+                    <label class="mt-2" for="username">Username:</label>
+                    <input class="form-control mt-2" formControlName="username" type="text">
+                    <label class="mt-2" for="password">Password:</label>
+                    <input class="form-control mt-2" formControlName="password" type="password">
+                </div>
+                <div class="text-center mt-3">
+                    <button [disabled]="!loginForm.valid" type="submit" class="btn btn-secondary">Login</button>
+                </div>
+                <div class="text-center mt-3">
+                    <a routerLink="/register">Not registered? Register here.</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

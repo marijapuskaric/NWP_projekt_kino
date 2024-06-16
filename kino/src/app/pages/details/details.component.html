@@ -1,0 +1,42 @@
+<ng-container *ngIf="projection">
+<div class="bg-dark m-0 vh-100" data-bs-theme="dark">
+    <div class="d-flex container p-5">
+        <div class="p-2 flex-shrink-1 me-4" style="width: 600px;">
+            <img [src]="imageToShow" class="img-fluid rounded-start" [alt]="projection.title + ' poster'">
+        </div>
+        <div class="p-2 w-100">
+            <h3 class="text-body-secondary">{{ projection.title }}</h3>
+            <p class="text-body-secondary">Trajanje: {{ projection.runningTime }}</p>
+            <p class="text-body-secondary">Opis:</p>
+            <p class="text-body-secondary"> {{ projection.description }}</p>
+            <p class="text-body-secondary">Vrijeme projekcije: {{ projection.showTime | date:'dd.MM.yyyy. HH:mm' }}</p>
+            <app-make-reservation-modal *ngIf="role === 'user'" class="float-end" [projection]="projection"></app-make-reservation-modal>
+            <div>
+                <p class="text-body-secondary">Reserved seats: {{ projection.takenSeats }}/{{ projection.availableSeats }}</p>
+                <div *ngIf="role === 'admin'">
+                    <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Reserved seats</th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let reservation of reservations">
+                            <td>{{ reservation.username}}</td>
+                            <td>{{ reservation.numberOfSeats }}</td>
+                            <td><button (click)="adminDeleteReservation(reservation.userId)" class="btn btn-secondary">Delete reservation</button></td>
+                          </tr>
+                          <tr *ngIf="!reservations || reservations.length === 0">
+                            <td colspan="3" class="text-center">No reservations found.</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</ng-container>

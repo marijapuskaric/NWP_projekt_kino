@@ -1,0 +1,35 @@
+<div *ngIf="role === 'user'" class="card mb-3 mt-3 p-5" data-bs-theme="dark" style="background-color: rgba(63, 60, 60, 0.719);">
+    <div class="d-flex container ">
+        <div class="p-2 flex-shrink-1 m-2" style="width: 300px;">
+            <img [src]="imageToShow" class="img-fluid rounded-start" [alt]="reservation.projection.title + ' poster'">
+        </div>
+        <div class="p-2 flex-grow-1">
+            <div class="card-body">
+                <h5 class="card-title">{{ reservation.projection.title }}</h5>
+                <p class="card-text">{{ reservation.projection.showTime | date:'dd.MM.yyyy. HH:mm' }}</p>
+                <p class="card-text"><small class="text-body-secondary">Trajanje: {{ reservation.projection.runningTime }}</small></p>
+                <p class="card-text">Rezervirano mjesta: {{reservation.numberOfSeats}}</p>
+                <button (click)="navigateToDetails(reservation.projection)" class="btn btn-secondary">More details</button>
+            </div>
+        </div>
+        <div class="p-2 m-2 d-flex flex-column">
+            <button *ngIf="active === 1" (click)="deleteReservation(reservation.projection._id)" class="btn btn-secondary m-2"><i class="bi bi-trash3 m-2"></i>Delete reservation</button>
+            <div *ngIf="active !== 1">
+                <i *ngIf="!liked"
+                    (click)="likeProjection(reservation.projection._id)"
+                    class="bi bi-heart m-2 cursor-pointer"
+                    style="transition: color 0.3s;"
+                    onmouseover="this.style.color='red'"
+                    onmouseout="this.style.color=''">
+                </i>
+                <i *ngIf="liked"
+                    (click)="deleteLike(reservation.projection._id)"
+                    class="bi bi-heart-fill m-2 cursor-pointer"
+                    style="color: red; transition: color 0.3s;"
+                    onmouseover="this.style.color='white'"
+                    onmouseout="this.style.color='red'">
+                </i>
+            </div>
+        </div>
+    </div>
+</div>

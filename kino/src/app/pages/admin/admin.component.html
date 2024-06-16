@@ -1,0 +1,39 @@
+<div *ngIf="role === 'admin'" class="bg-dark m-0" data-bs-theme="dark">
+  <div class="border-bottom border-body container d-flex justify-content-between align-items-center ">
+    <h1 class="text-body-secondary">Projections</h1>
+    <button type="button" class="btn btn-secondary" (click)="openAddProjectionModal()"><i class="bi bi-plus-circle m-2 ms-0"></i>Add new projection</button>
+  </div>
+
+  <!-- Projection Lists -->
+  <div class="container mt-5 p-2">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink>Future projections</button>
+        <ng-template ngbNavContent>
+          <app-movie-element
+            *ngFor="let projection of futureProjections"
+            [projection]="projection"
+            [active]="active"
+            (edit)="openAddProjectionModal($event)"
+          ></app-movie-element>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <button ngbNavLink>Past projections</button>
+        <ng-template ngbNavContent>
+          <app-movie-element
+            *ngFor="let projection of pastProjections"
+            [projection]="projection"
+            [active]="active"
+            (edit)="openAddProjectionModal($event)"
+          ></app-movie-element>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    <pre>Active: {{ active }}</pre>
+  </div>
+
+  <!-- Include the Add Projection Modal Component -->
+  <app-add-projection-modal></app-add-projection-modal>
+</div>
