@@ -26,9 +26,15 @@ export class ProfileComponent implements OnInit{
   pastReservations: { projection: ProjectionModel, numberOfSeats: number }[] = [];
   likes: ProjectionModel[] = [];
 
-  constructor(private router: Router, private sanitizer: DomSanitizer, private crudService: CrudService, private authService: AuthService,) {}
+  constructor(
+    private router: Router, 
+    private sanitizer: DomSanitizer, 
+    private crudService: CrudService, 
+    private authService: AuthService
+  ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.authService.getUser().subscribe(
       (response) => {
         this.userId = response.user._id;
@@ -44,7 +50,8 @@ export class ProfileComponent implements OnInit{
     );
   }
 
-  loadFutureReservations(userId: string): void {
+  loadFutureReservations(userId: string): void 
+  {
     this.crudService.getUserFutureReservations(userId).subscribe(
       (response) => {
         this.futureReservations = response.futureReservations;
@@ -55,7 +62,8 @@ export class ProfileComponent implements OnInit{
     );
   }
 
-  loadPastReservations(userId: string): void {
+  loadPastReservations(userId: string): void 
+  {
     this.crudService.getUserPastReservations(userId).subscribe(
       (response) => {
         this.pastReservations = response.pastReservations;
@@ -66,7 +74,8 @@ export class ProfileComponent implements OnInit{
     );
   }
 
-  loadLikedProjections(userId: string): void {
+  loadLikedProjections(userId: string): void 
+  {
     this.crudService.getLikes(userId).subscribe(
       (response) => {
         this.likes = response.projections;
@@ -78,17 +87,33 @@ export class ProfileComponent implements OnInit{
     );
   }
 
-  getProjectionImage(projection: ProjectionModel): SafeResourceUrl {
-    if (projection && projection.img && projection.img.data) {
+  getProjectionImage(projection: ProjectionModel): SafeResourceUrl 
+  {
+    if (projection && projection.img && projection.img.data) 
+    {
       const base64String = Buffer.from(projection.img.data).toString('base64');
       const imageBase64 = 'data:' + projection.img.contentType + ';base64,' + base64String;
       const imageToShow = this.sanitizer.bypassSecurityTrustResourceUrl(imageBase64);
       return imageToShow
     }
-    return this.sanitizer.bypassSecurityTrustResourceUrl(''); // Return a safe empty URL if no image is found
+    return this.sanitizer.bypassSecurityTrustResourceUrl('');
   }
 
-  navigateToDetails(projection: ProjectionModel): void {
+  navigateToDetails(projection: ProjectionModel): void 
+  {
     this.router.navigate(['/details', projection._id], {state:{data:projection}});
+  }
+
+  handleDeleteReservation(): void
+  {
+    this.loadFutureReservations(this.userId);
+  }
+  handleLikeReservation(): void
+  {
+    this.loadLikedProjections(this.userId);
+  }
+  handleDislikeReservation(): void
+  {
+    this.loadLikedProjections(this.userId);
   }
 }

@@ -7,8 +7,8 @@ import { AuthService } from '../../shared/authService';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit{
-
+export class LoginComponent implements OnInit
+{
   loginForm: FormGroup;
   constructor(private authService: AuthService) {}
   ngOnInit(): void 
@@ -24,5 +24,4 @@ export class LoginComponent implements OnInit{
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password);
     
   }
-
 }

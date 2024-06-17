@@ -1,10 +1,9 @@
-import { Component, OnInit, TemplateRef, Input, ViewChild, ElementRef, ContentChildren } from '@angular/core';
+import { Component, OnInit, TemplateRef, Input, ViewChild, ElementRef, ContentChildren, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CrudService } from '../../shared/crudService';
 import { AuthService } from '../../shared/authService';
 import { ProjectionModel } from '../../shared/projectionModel';
-import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-add-projection-modal',
@@ -14,6 +13,7 @@ import { Buffer } from 'buffer';
 export class AddProjectionModalComponent implements OnInit {
   @Input() projection: ProjectionModel; 
   @ViewChild('content', { static: true }) modalContent!: TemplateRef<any>;
+  @Output() addOrUpdateProjectionEvent = new EventEmitter<ProjectionModel>();
   closeResult = '';
   projectionForm: FormGroup;
   userId: string;
@@ -44,10 +44,9 @@ export class AddProjectionModalComponent implements OnInit {
       (response) => {
         this.userId = response.user._id;
         this.role = response.user.role;
-        if (!this.projection?.createdBy) {
-          this.projectionForm.patchValue({
-            createdBy: this.userId
-          });
+        if (!this.projection?.createdBy) 
+        {
+          this.projectionForm.patchValue({createdBy: this.userId});
         }
       },
       (error) => {
@@ -56,8 +55,10 @@ export class AddProjectionModalComponent implements OnInit {
     );
   }
 
-  openModal(projection?: ProjectionModel): void {
-    if (projection) {
+  openModal(projection?: ProjectionModel): void 
+  {
+    if (projection) 
+    {
       this.projection = projection;
       this.projectionForm.patchValue({
         _id: projection._id,
@@ -70,22 +71,22 @@ export class AddProjectionModalComponent implements OnInit {
         createdBy: projection.createdBy
       });
     }
-    else{
-      
-    this.projectionForm.reset();
+    else
+    {
+      this.projectionForm.reset();
     }
-
     this.open(this.modalContent);
   }
 
-  open(content: TemplateRef<any>): void {
+  open(content: TemplateRef<any>): void 
+  {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
-        if (result === 'Save click') {
-          if (this.projectionForm.get('_id')?.value) { this.updateProjection()}
-          else{this.addProjection();}
-              
+        if (result === 'Save click') 
+        {
+          if (this.projectionForm.get('_id')?.value) { this.updateProjection(); }
+          else { this.addProjection(); }     
         }
       },
       (reason) => {
@@ -94,8 +95,10 @@ export class AddProjectionModalComponent implements OnInit {
     );
   }
 
-  updateProjection(): void {
-    if (this.projectionForm.valid) {
+  updateProjection(): void 
+  {
+    if (this.projectionForm.valid) 
+    {
       const formData = new FormData();
       formData.append('_id', this.projectionForm.get('_id')?.value || '');
       formData.append('title', this.projectionForm.get('title')?.value);
@@ -105,14 +108,16 @@ export class AddProjectionModalComponent implements OnInit {
       formData.append('takenSeats', this.projectionForm.get('takenSeats')?.value);
     
       const showTimeValue = this.projectionForm.get('showTime')?.value;
-      if (showTimeValue) {
+      if (showTimeValue) 
+      {
         const showTime = new Date(showTimeValue);
         formData.append('showTime', showTime.toISOString());
       }
   
       formData.append('createdBy', this.projectionForm.get('createdBy')?.value);
   
-      if (this.selectedFile) {
+      if (this.selectedFile) 
+      {
         formData.append('image', this.selectedFile);
       }
   
@@ -120,18 +125,19 @@ export class AddProjectionModalComponent implements OnInit {
       this.crudService.editProjection(id, formData).subscribe(
         (response) => {
           console.log('Projection updated successfully', response);
-          // Optionally handle success message or redirection
+          this.addOrUpdateProjectionEvent.emit(response);
         },
         (error) => {
           console.error('Error updating projection', error);
-          // Optionally handle error message
         }
       );
     }
   }
 
-  private addProjection(): void {
-    if (this.projectionForm.valid) {
+  private addProjection(): void 
+  {
+    if (this.projectionForm.valid) 
+    {
       const showTime = new Date(this.projectionForm.value.showTime);
       const formData = new FormData();
       formData.append('title', this.projectionForm.get('title')?.value);
@@ -142,15 +148,15 @@ export class AddProjectionModalComponent implements OnInit {
       formData.append('showTime', showTime.toISOString());
       formData.append('createdBy', this.userId);
 
-      if (this.selectedFile) {
+      if (this.selectedFile) 
+      {
         formData.append('image', this.selectedFile);
       }
-
-      
 
       this.crudService.addProjection(formData).subscribe(
         (response) => {
           console.log('Projection added successfully', response);
+          this.addOrUpdateProjectionEvent.emit(response);
         },
         (error) => {
           console.error('Error adding projection', error);
@@ -159,48 +165,11 @@ export class AddProjectionModalComponent implements OnInit {
     }
   }
 
-  private addOrUpdateProjection(): void {
-    if (this.projectionForm.valid) {
-      const showTime = new Date(this.projectionForm.value.showTime);
-      showTime.toISOString();
-      const formData = new FormData();
-      formData.append('title', this.projectionForm.get('title')?.value);
-      formData.append('description', this.projectionForm.get('description')?.value);
-      formData.append('runningTime', this.projectionForm.get('runningTime')?.value);
-      formData.append('availableSeats', this.projectionForm.get('availableSeats')?.value);
-      formData.append('takenSeats', this.projectionForm.get('takenSeats')?.value);
-      formData.append('showTime', this.projectionForm.get('showTime')?.value);
-      formData.append('createdBy', this.projectionForm.get('createdBy')?.value);
 
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
-
-      if (this.projectionForm.get('_id')?.value) {
-        const id = this.projectionForm.get('_id')?.value;
-        this.crudService.editProjection(id, formData).subscribe(
-          (response) => {
-            console.log('Projection edited successfully', response);
-          },
-          (error) => {
-            console.error('Error editing projection', error);
-          }
-        );
-      } else {
-        this.crudService.addProjection(formData).subscribe(
-          (response) => {
-            console.log('Projection added successfully', response);
-          },
-          (error) => {
-            console.error('Error adding projection', error);
-          }
-        );
-      }
-    }
-  }
-
-  private getDismissReason(reason: any): string {
-    switch (reason) {
+  private getDismissReason(reason: any): string 
+  {
+    switch (reason) 
+    {
       case ModalDismissReasons.ESC:
         return 'by pressing ESC';
       case ModalDismissReasons.BACKDROP_CLICK:
@@ -210,13 +179,13 @@ export class AddProjectionModalComponent implements OnInit {
     }
   }
 
-  onFileSelected(event: Event): void {
+  onFileSelected(event: Event): void 
+  {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
+    if (input.files && input.files.length) 
+    {
       this.selectedFile = input.files[0];
-      this.projectionForm.patchValue({
-        image: this.selectedFile.name
-      });
+      this.projectionForm.patchValue({ image: this.selectedFile.name });
     }
   }
 }

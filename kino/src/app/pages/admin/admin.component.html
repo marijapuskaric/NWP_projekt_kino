@@ -4,7 +4,6 @@
     <button type="button" class="btn btn-secondary" (click)="openAddProjectionModal()"><i class="bi bi-plus-circle m-2 ms-0"></i>Add new projection</button>
   </div>
 
-  <!-- Projection Lists -->
   <div class="container mt-5 p-2">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
       <li [ngbNavItem]="1">
@@ -15,6 +14,7 @@
             [projection]="projection"
             [active]="active"
             (edit)="openAddProjectionModal($event)"
+            (deleteProjectionEvent)="handleProjectionDeleted()"
           ></app-movie-element>
         </ng-template>
       </li>
@@ -34,6 +34,5 @@
     <pre>Active: {{ active }}</pre>
   </div>
 
-  <!-- Include the Add Projection Modal Component -->
-  <app-add-projection-modal></app-add-projection-modal>
+  <app-add-projection-modal (addOrUpdateProjectionEvent)="handleAddOrUpdateEvent()"></app-add-projection-modal>
 </div>

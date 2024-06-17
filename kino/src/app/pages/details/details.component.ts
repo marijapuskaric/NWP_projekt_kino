@@ -29,15 +29,18 @@ export class DetailsComponent implements OnInit
     private authService: AuthService 
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.projection = history.state.data;
-    if (this.projection && this.projection.img && this.projection.img.data) {
+    if (this.projection && this.projection.img && this.projection.img.data) 
+    {
       let imageBase64: string;
-      if (typeof this.projection.img.data === 'string') {
-        // Already in Base64 format for liked projections
+      if (typeof this.projection.img.data === 'string') 
+      {
         imageBase64 = 'data:' + this.projection.img.contentType + ';base64,' + this.projection.img.data;
-      } else {
-        // Convert to Base64 assuming it's a Buffer or similar structure for main projection
+      } 
+      else 
+      {
         imageBase64 = 'data:' + this.projection.img.contentType + ';base64,' + Buffer.from(this.projection.img.data).toString('base64');
       }
       this.imageToShow = this.sanitizer.bypassSecurityTrustResourceUrl(imageBase64);
@@ -54,7 +57,8 @@ export class DetailsComponent implements OnInit
     );
   }
 
-  loadProjectionReservations(projectionId: string): void {
+  loadProjectionReservations(projectionId: string): void 
+  {
     this.crudService.getReservationsForProjection(projectionId).subscribe(
       (response) => {
         this.reservations = response.reservations;
@@ -74,11 +78,11 @@ export class DetailsComponent implements OnInit
       (deleteResponse) => {
         console.log(deleteResponse);
         console.log("reservation deleted", userId);
+        this.loadProjectionReservations(this.projection._id);
       },
       (error) => {
         console.error('Error deleting reservation', error);
       }
     );
-    this.loadProjectionReservations(this.projection._id);
   }
 }

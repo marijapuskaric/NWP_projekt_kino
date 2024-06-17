@@ -7,7 +7,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ reservation.projection.title }}</h5>
                 <p class="card-text">{{ reservation.projection.showTime | date:'dd.MM.yyyy. HH:mm' }}</p>
-                <p class="card-text"><small class="text-body-secondary">Trajanje: {{ reservation.projection.runningTime }}</small></p>
+                <p class="card-text"><small class="text-body-secondary">Running time: {{ reservation.projection.runningTime }}</small></p>
                 <p class="card-text">Rezervirano mjesta: {{reservation.numberOfSeats}}</p>
                 <button (click)="navigateToDetails(reservation.projection)" class="btn btn-secondary">More details</button>
             </div>

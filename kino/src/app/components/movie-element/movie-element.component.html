@@ -7,7 +7,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ projection.title }}</h5>
                 <p class="card-text">{{ projection.showTime | date:'dd.MM.yyyy. HH:mm' }}</p>
-                <p class="card-text"><small class="text-body-secondary">Trajanje: {{ projection.runningTime }}</small></p>
+                <p class="card-text"><small class="text-body-secondary">Running time: {{ projection.runningTime }}</small></p>
                 <button (click)="navigateToDetails(projection)" class="btn btn-secondary">More details</button>
             </div>
         </div>

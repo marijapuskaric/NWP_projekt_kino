@@ -13,11 +13,13 @@ export class HomeComponent implements OnInit
 
   constructor(private crudService: CrudService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.loadFutureProjections();
   }
 
-  loadFutureProjections(): void {
+  loadFutureProjections(): void 
+  {
     this.crudService.getFutureProjections().subscribe(
       (response) => {
         this.futureProjections = response.projections.sort((a,b) => {
@@ -30,4 +32,8 @@ export class HomeComponent implements OnInit
     );
   }
 
+  handleProjectionDeleted(projectionId: string): void 
+  {
+    this.futureProjections = this.futureProjections.filter(projection => projection._id !== projectionId);
+  }
 }

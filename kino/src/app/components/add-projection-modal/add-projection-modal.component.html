@@ -1,32 +1,32 @@
 <ng-template #content let-modal>
 	<div *ngIf="role === 'admin'" class="bg-dark m-0" data-bs-theme="dark">
-	  <div class="modal-header">
-		<h4 class="modal-title text-body-secondary" id="modal-basic-title">Add new projection</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	  </div>
-	  <div class="modal-body">
-		<form [formGroup]="projectionForm">
-			<div class="mb-3">
-				<label for="title" class="text-body-secondary mt-2">Title:</label>
-				<input class="form-control mt-2" formControlName="title" type="text">
-				<label for="description" class="text-body-secondary mt-2">Description:</label>
-				<input class="form-control mt-2" formControlName="description" type="text">
-				<label for="runningTime" class="text-body-secondary mt-2">Running time:</label>
-				<input class="form-control mt-2" formControlName="runningTime" type="text">
-				<label for="image" class="text-body-secondary mt-2">Image:</label>
-      			<input class="form-control mt-2" type="file" (change)="onFileSelected($event)">
-				<label for="availableSeats" class="text-body-secondary mt-2">Available seats:</label>
-				<input class="form-control mt-2" formControlName="availableSeats" type="number">
-				<input type="hidden" formControlName="takenSeats">
-				<label for="showTime" class="text-body-secondary mt-2">Show time:</label>
-				<input class="form-control mt-2" formControlName="showTime" type="datetime-local">
-				<input type="hidden" formControlName="createdBy">
-			</div>
-		</form>		
-	  </div>
-	  <div class="modal-footer">
-		<button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">Save</button>
-	  </div>
+	  	<div class="modal-header">
+			<h4 class="modal-title text-body-secondary" id="modal-basic-title">Add new projection</h4>
+			<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	  	</div>
+	  	<div class="modal-body">
+			<form [formGroup]="projectionForm">
+				<div class="mb-3">
+					<label for="title" class="text-body-secondary mt-2">Title:</label>
+					<input class="form-control mt-2" formControlName="title" type="text">
+					<label for="description" class="text-body-secondary mt-2">Description:</label>
+					<input class="form-control mt-2" formControlName="description" type="text">
+					<label for="runningTime" class="text-body-secondary mt-2">Running time:</label>
+					<input class="form-control mt-2" formControlName="runningTime" type="text">
+					<label for="image" class="text-body-secondary mt-2">Image:</label>
+					<input class="form-control mt-2" type="file" (change)="onFileSelected($event)">
+					<label for="availableSeats" class="text-body-secondary mt-2">Available seats:</label>
+					<input class="form-control mt-2" formControlName="availableSeats" type="number">
+					<input type="hidden" formControlName="takenSeats">
+					<label for="showTime" class="text-body-secondary mt-2">Show time:</label>
+					<input class="form-control mt-2" formControlName="showTime" type="datetime-local">
+					<input type="hidden" formControlName="createdBy">
+				</div>
+			</form>		
+	  	</div>
+	  	<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">Save</button>
+	  	</div>
 	</div>
-  </ng-template>
+</ng-template>
   

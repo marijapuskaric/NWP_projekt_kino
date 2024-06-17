@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProjectionModel } from '../../shared/projectionModel';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -10,18 +10,29 @@ import { AuthService } from '../../shared/authService';
   templateUrl: './movie-element-profile.component.html',
   styleUrls: ['./movie-element-profile.component.scss']
 })
-export class MovieElementProfileComponent implements OnInit {
+export class MovieElementProfileComponent implements OnInit 
+{
   @Input() reservation: { projection: ProjectionModel, numberOfSeats: number };
   @Input() active: number;
+  @Output() deleteEvent = new EventEmitter<any>();
+  @Output() likeEvent = new EventEmitter<any>();
+  @Output() dislikeEvent = new EventEmitter<any>();
   imageToShow: SafeResourceUrl;
   userId: string;
   role: string;
   liked: boolean = false;
 
-  constructor(private sanitizer: DomSanitizer, private router: Router, private crudService: CrudService, private authService: AuthService) {}
+  constructor(
+    private sanitizer: DomSanitizer, 
+    private router: Router, 
+    private crudService: CrudService, 
+    private authService: AuthService
+  ) {}
 
-  ngOnInit(): void {
-    if (this.reservation.projection && this.reservation.projection.img && this.reservation.projection.img.data) {
+  ngOnInit(): void 
+  {
+    if (this.reservation.projection && this.reservation.projection.img && this.reservation.projection.img.data) 
+    {
       const imageBase64 = 'data:' + this.reservation.projection.img.contentType + ';base64,' + this.reservation.projection.img.data;
       this.imageToShow = this.sanitizer.bypassSecurityTrustResourceUrl(imageBase64);
     }
@@ -47,10 +58,13 @@ export class MovieElementProfileComponent implements OnInit {
     );
   }
 
-  navigateToDetails(projection: ProjectionModel): void {
+  navigateToDetails(projection: ProjectionModel): void 
+  {
     this.router.navigate(['/details', projection._id], { state: { data: projection } });
   }
-  deleteReservation(projectionId: string) {
+
+  deleteReservation(projectionId: string) 
+  {
     this.authService.getUser().subscribe(
       (response) => {
         this.userId = response.user._id;
@@ -58,6 +72,7 @@ export class MovieElementProfileComponent implements OnInit {
           (deleteResponse) => {
             console.log(deleteResponse);
             console.log("reservation deleted", projectionId);
+            this.deleteEvent.emit();
           },
           (error) => {
             console.error('Error deleting reservation', error);
@@ -80,6 +95,7 @@ export class MovieElementProfileComponent implements OnInit {
             console.log(likeResponse);
             console.log("projecction liked", projectionId);
             this.liked = true;
+            this.likeEvent.emit();
           },
           (likeError) => {
             console.error('Error liking projection', likeError);
@@ -102,6 +118,7 @@ export class MovieElementProfileComponent implements OnInit {
             console.log(deleteResponse);
             console.log("like deleted", projectionId);
             this.liked = false;
+            this.dislikeEvent.emit();
           },
           (error) => {
             console.error('Error deleting like', error);

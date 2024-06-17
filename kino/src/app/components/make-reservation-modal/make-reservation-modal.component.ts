@@ -10,7 +10,8 @@ import { ProjectionModel } from '../../shared/projectionModel';
   templateUrl: './make-reservation-modal.component.html',
   styleUrl: './make-reservation-modal.component.scss'
 })
-export class MakeReservationModalComponent implements OnInit{
+export class MakeReservationModalComponent implements OnInit
+{
   @Input() projection: ProjectionModel;
   closeResult = '';
   reservationForm: FormGroup;
@@ -25,7 +26,8 @@ export class MakeReservationModalComponent implements OnInit{
     private formBuilder: FormBuilder
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     console.log("Projection id:", this.projection._id);
     this.reservationForm = this.formBuilder.group({
       numOfSeats: ['', Validators.required],
@@ -42,9 +44,7 @@ export class MakeReservationModalComponent implements OnInit{
       (response) => {
         this.userId = response.user._id;
         this.role = response.user.role;
-        this.reservationForm.patchValue({
-          madeBy: this.userId
-        });
+        this.reservationForm.patchValue({ madeBy: this.userId });
       },
       (error) => {
         console.error('Error fetching user information', error);
@@ -52,13 +52,12 @@ export class MakeReservationModalComponent implements OnInit{
     );
   }
 
-  open(content: TemplateRef<any>): void {
+  open(content: TemplateRef<any>): void 
+  {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
-        if (result === 'Save click') {
-          this.addReservation();
-        }
+        if (result === 'Save click') { this.addReservation(); }
       },
       (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -66,8 +65,10 @@ export class MakeReservationModalComponent implements OnInit{
     );
   }
 
-  private getDismissReason(reason: any): string {
-    switch (reason) {
+  private getDismissReason(reason: any): string 
+  {
+    switch (reason) 
+    {
       case ModalDismissReasons.ESC:
         return 'by pressing ESC';
       case ModalDismissReasons.BACKDROP_CLICK:
@@ -77,35 +78,33 @@ export class MakeReservationModalComponent implements OnInit{
     }
   }
 
-  private addReservation(): void {
-    if (this.reservationForm.valid) {
+  private addReservation(): void 
+  {
+    if (this.reservationForm.valid) 
+    {
       var seats = this.reservationForm.get('numOfSeats')?.value
       if(this.projection.takenSeats + seats <= this.projection.availableSeats)
       {
-
-        
-      const reservationData = {
-        numOfSeats: this.reservationForm.get('numOfSeats')?.value,
-        projection: this.reservationForm.get('projection')?.value,
-        madeBy: this.reservationForm.get('madeBy')?.value
-      };
-      console.log(reservationData);
+        const reservationData = {
+          numOfSeats: this.reservationForm.get('numOfSeats')?.value,
+          projection: this.reservationForm.get('projection')?.value,
+          madeBy: this.reservationForm.get('madeBy')?.value
+        };
   
-      this.crudService.makeReservation(this.projection._id, reservationData).subscribe(
-        (response) => {
-          console.log('Reservation made successfully', response);
-        },
-        (error) => {
-          console.error('Error making a reservation', error);
-        }
-      );
-    }
-    else
-    {
-      console.log('Not enough seats available');
-    }
+        this.crudService.makeReservation(this.projection._id, reservationData).subscribe(
+          (response) => {
+            console.log('Reservation made successfully', response);
+          },
+          (error) => {
+            console.error('Error making a reservation', error);
+          }
+        );
+      }
+      else
+      {
+        console.log('Not enough seats available');
+      }
     }
   }
-  
 }
   

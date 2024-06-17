@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { ProjectionModel } from './projectionModel';
-import { ReservationModel } from './reservationModel';
-import { LikeModel } from './likeModel';
 
 @Injectable({
   providedIn: 'root'
@@ -79,7 +77,8 @@ export class CrudService {
     return this.http.get<any>(`http://localhost:3000/likes/${id}`);
   }
 
-  isProjectionLiked(userId: string, projectionId: string): Observable<{ liked: boolean }> {
+  isProjectionLiked(userId: string, projectionId: string): Observable<{ liked: boolean }> 
+  {
     return this.http.get<{ liked: boolean }>(`http://localhost:3000/likes/${userId}/${projectionId}`);
   }
 }

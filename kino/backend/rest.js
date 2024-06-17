@@ -26,7 +26,8 @@ app.use((req, res, next) => {
 });
 
 const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
+if (!fs.existsSync(uploadsDir)) 
+{
     fs.mkdirSync(uploadsDir);
 }
 
@@ -129,7 +130,8 @@ app.get("/users", async (req, res) => {
 
 app.post("/createProjection", upload.single('image'), (req, res) => {
 
-    if (!req.file) {
+    if (!req.file) 
+    {
         return res.status(400).json({ message: 'No file uploaded' });
     }
 
@@ -137,7 +139,8 @@ app.post("/createProjection", upload.single('image'), (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.file.filename);
 
     fs.readFile(filePath, (err, data) => {
-        if (err) {
+        if (err) 
+        {
             console.error('File reading error:', err);
             return res.status(500).json({ error: err });
         }
@@ -181,14 +184,17 @@ app.post("/createProjection", upload.single('image'), (req, res) => {
 app.post('/deleteProjection/:projectionId', upload.single('image'), async (req, res) => {
     var projectionId = req.params.projectionId;
   
-    try {
+    try 
+    {
       await projectionModel.findOneAndDelete({ _id: projectionId });
       await userProjectionLikedModel.deleteMany({ projectionId: projectionId });
       await userProjectionReservationModel.deleteMany({ projectionId: projectionId });
   
       console.log("Deleted projection and related entries");
       res.status(200).json({ message: "Projection deleted successfully" }); 
-    } catch (err) {
+    } 
+    catch (err) 
+    {
       console.error(err);
       res.status(500).json({ error: "Error deleting projection and related entries" }); 
     }
@@ -198,13 +204,14 @@ app.post('/deleteProjection/:projectionId', upload.single('image'), async (req, 
     const id = req.params.id;
     const { title, description, runningTime, availableSeats, takenSeats, showTime, createdBy } = req.body;
   
-    try {
+    try 
+    {
       const projection = await ProjectionModel.findById(id);
-      if (!projection) {
+      if (!projection) 
+      {
         return res.status(404).send("Projection not found");
       }
-  
-      // Update projection properties
+
       projection.title = title;
       projection.description = description;
       projection.runningTime = runningTime;
@@ -213,7 +220,8 @@ app.post('/deleteProjection/:projectionId', upload.single('image'), async (req, 
       projection.showTime = showTime;
       projection.createdBy = createdBy;
   
-      if (req.file) {
+      if (req.file) 
+      {
         const filePath = path.join(__dirname, 'uploads', req.file.filename);
         fs.readFile(filePath, (err, data) => {
           if (err) {
@@ -224,7 +232,6 @@ app.post('/deleteProjection/:projectionId', upload.single('image'), async (req, 
             data: data,
             contentType: req.file.mimetype
           };
-          // Save projection after updating img
           projection.save()
             .then(() => {
               console.log('Projection updated successfully');
@@ -235,13 +242,16 @@ app.post('/deleteProjection/:projectionId', upload.single('image'), async (req, 
               res.status(500).json({ error: 'Error saving projection' });
             });
         });
-      } else {
-        // Save projection without updating img
+      } 
+      else 
+      {
         await projection.save();
         console.log('Projection updated successfully without image');
         res.status(200).json({ message: 'Projection updated' });
       }
-    } catch (err) {
+    } 
+    catch (err) 
+    {
       console.error('Error updating projection:', err);
       res.status(500).json({ error: 'Error updating projection data' });
     }
@@ -249,7 +259,8 @@ app.post('/deleteProjection/:projectionId', upload.single('image'), async (req, 
 
 app.get("/futureProjections", async (req, res) => {
     const currentTime = new Date();
-    try {
+    try 
+    {
         const projections = await ProjectionModel.find({ showTime: { $gt: currentTime } });
 
         const projectionsWithBase64 = projections.map(proj => {
@@ -263,7 +274,9 @@ app.get("/futureProjections", async (req, res) => {
         });
 
         res.json({ projections: projectionsWithBase64 });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching projections:', err);
         res.status(500).json({ error: 'Error fetching projections' });
     }
@@ -271,7 +284,8 @@ app.get("/futureProjections", async (req, res) => {
 
 app.get("/pastProjections", async (req, res) => {
     const currentTime = new Date();
-    try {
+    try 
+    {
         const projections = await ProjectionModel.find({ showTime: { $lt: currentTime } });
 
         const projectionsWithBase64 = projections.map(proj => {
@@ -285,7 +299,9 @@ app.get("/pastProjections", async (req, res) => {
         });
 
         res.json({ projections: projectionsWithBase64 });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching projections:', err);
         res.status(500).json({ error: 'Error fetching projections' });
     }
@@ -293,21 +309,26 @@ app.get("/pastProjections", async (req, res) => {
 
 app.get("/projection/:id", async (req, res) => {
     const projectionId = req.params.id;
-    try {
+    try 
+    {
         const projection = await ProjectionModel.findById(projectionId);
 
-        if (!projection) {
+        if (!projection) 
+        {
             return res.status(404).json({ error: 'Projection not found' });
         }
 
         const projectionWithBase64 = projection.toObject();
 
-        if (projectionWithBase64.img && projectionWithBase64.img.data) {
+        if (projectionWithBase64.img && projectionWithBase64.img.data) 
+        {
             projectionWithBase64.img.data = projectionWithBase64.img.data.toString('base64');
         }
 
         res.json({ projection: projectionWithBase64 });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching projection:', err);
         res.status(500).json({ error: 'Error fetching projection' });
     }
@@ -322,10 +343,12 @@ app.post("/makeReservation/:projectionId", async (req, res) => {
     console.log("User id:", userId);
     console.log("seats:", numberOfSeats);
 
-    try {
+    try 
+    {
         const existingReservation = await userProjectionReservationModel.findOne({ userId: userId, projectionId: projectionId });
 
-        if (existingReservation) {
+        if (existingReservation) 
+        {
             return res.status(400).json({ message: 'User already has a reservation for this projection.' });
         }
 
@@ -345,7 +368,8 @@ app.post("/makeReservation/:projectionId", async (req, res) => {
         });
         res.status(200).json(newUserProjectionReservation);
     } 
-    catch (err) {
+    catch (err) 
+    {
         console.error('Error adding reservation:', err);
         res.status(500).json({ message: 'Error adding reservation.' });
     }
@@ -356,20 +380,24 @@ app.post('/deleteReservation/:projectionId', async (req, res) => {
     var projectionId = req.params.projectionId;
     var userId = req.body.userId;
 
-    if (!projectionId || !userId) {
+    if (!projectionId || !userId) 
+    {
         return res.status(400).send("Projection ID and User ID are required");
     }
 
-    try {
+    try 
+    {
         const userProjectionReservation = await userProjectionReservationModel.findOne({ userId: userId, projectionId: projectionId });
 
-        if (!userProjectionReservation) {
+        if (!userProjectionReservation) 
+        {
             return res.status(404).send("Reservation not found");
         }
 
         const projection = await ProjectionModel.findById(projectionId);
 
-        if (!projection) {
+        if (!projection) 
+        {
             return res.status(404).send("Projection not found");
         }
 
@@ -383,7 +411,9 @@ app.post('/deleteReservation/:projectionId', async (req, res) => {
 
         console.log("Deleted");
         res.status(200).json({ message: "Reservation deleted successfully" });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error(err);
         res.status(500).send("Error deleting reservation");
     }
@@ -394,14 +424,17 @@ app.get("/futureReservations/:userId", async (req, res) => {
     const currentTime = new Date();
     const userId = req.params.userId;
 
-    try {
+    try 
+    {
         const reservations = await userProjectionReservationModel.find({ userId: userId }).populate('projectionId');
         const futureReservations = [];
 
-        for (const reservation of reservations) {
+        for (const reservation of reservations) 
+        {
             const projection = await ProjectionModel.findById(reservation.projectionId);
 
-            if (projection.showTime > currentTime) {
+            if (projection.showTime > currentTime) 
+            {
                 const projectionWithBase64 = {
                     ...projection.toObject(),
                     img: {
@@ -418,7 +451,9 @@ app.get("/futureReservations/:userId", async (req, res) => {
         }
 
         res.json({ futureReservations: futureReservations });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching reservations:', err);
         res.status(500).json({ error: 'Error fetching reservations' });
     }
@@ -428,13 +463,16 @@ app.get("/pastReservations/:userId", async (req, res) => {
     const currentTime = new Date();
     const userId = req.params.userId;
 
-    try {
+    try 
+    {
         const reservations = await userProjectionReservationModel.find({ userId: userId }).populate('projectionId');
         const pastReservations = [];
-        for (const reservation of reservations) {
+        for (const reservation of reservations) 
+        {
             const projection = await ProjectionModel.findById(reservation.projectionId);
 
-            if (projection.showTime < currentTime) {
+            if (projection.showTime < currentTime) 
+            {
                 const projectionWithBase64 = {
                     ...projection.toObject(),
                     img: {
@@ -450,7 +488,9 @@ app.get("/pastReservations/:userId", async (req, res) => {
             }
         }
         res.json({ pastReservations: pastReservations });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching reservations:', err);
         res.status(500).json({ error: 'Error fetching reservations' });
     }
@@ -460,7 +500,8 @@ app.get("/reservations/:projectionId", async (req, res) => {
     const projectionId = req.params.projectionId;
     console.log(`Received request for projectionId: ${projectionId}`);
 
-    try {
+    try 
+    {
         const reservations = await userProjectionReservationModel.find({ projectionId: projectionId }).populate('userId', 'username');
 
         const reservationDetails = reservations.map(reservation => ({
@@ -471,7 +512,9 @@ app.get("/reservations/:projectionId", async (req, res) => {
         }));
 
         res.json({ reservations: reservationDetails });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching reservations:', err);
         res.status(500).json({ error: 'Error fetching reservations' });
     }
@@ -482,10 +525,12 @@ app.post("/likeProjection/:projectionId", async (req, res) => {
     var projectionId = req.params.projectionId;
     var userId = req.body.userId;
 
-    try {
+    try 
+    {
         const existingLike = await userProjectionLikedModel.findOne({ userId: userId, projectionId: projectionId });
 
-        if (existingLike) {
+        if (existingLike) 
+        {
             return res.status(400).json({ message: 'User has already liked this projection.' });
         }
 
@@ -497,7 +542,8 @@ app.post("/likeProjection/:projectionId", async (req, res) => {
         await newUserProjectionLike.save();
         res.status(200).json(newUserProjectionLike);
     } 
-    catch (err) {
+    catch (err) 
+    {
         console.error('Error liking projection:', err);
         res.status(500).json({ message: 'Error liking projection.' });
     }
@@ -523,7 +569,8 @@ app.post('/deleteLike/:projectionId', async (req,res) =>
 app.get("/likes/:userId", async (req, res) => {
     const userId = req.params.userId;
     console.log(`Received request for userId: ${userId}`);
-    try {
+    try 
+    {
         const likes = await userProjectionLikedModel.find({ userId: userId });
         const projectionIds = likes.map(like => like.projectionId);
 
@@ -532,7 +579,9 @@ app.get("/likes/:userId", async (req, res) => {
         });
 
         res.json({ projections: projections });
-    } catch (err) {
+    } 
+    catch (err) 
+    {
         console.error('Error fetching likes:', err);
         res.status(500).json({ error: 'Error fetching likes' });
     }
@@ -542,15 +591,16 @@ app.get("/likes/:userId/:projectionId", async (req, res) => {
     const { userId, projectionId } = req.params;
     console.log(`Checking if user ${userId} has liked projection ${projectionId}`);
 
-    try {
+    try 
+    {
         const like = await userProjectionLikedModel.findOne({ userId: userId, projectionId: projectionId });
         res.json({ liked: !!like });
-    } catch (err) {
+    } 
+    catch (err)
+    {
         console.error('Error checking like status:', err);
         res.status(500).json({ error: 'Error checking like status' });
     }
 });
-
-
 
 module.exports = app;

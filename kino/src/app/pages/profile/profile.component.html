@@ -1,54 +1,54 @@
 <div *ngIf="role === 'user'" class="bg-dark m-0" data-bs-theme="dark">
-    <div class="border-bottom border-body container d-flex justify-content-between align-items-center ">
-        <h1 class="text-body-secondary">Profile</h1>
-    </div>
-    <div class="d-flex container">
-        <div class="p-2 flex-shrink-1 m-2">
-            <div class="card mt-5 p-2 ps-1" style="width: 20rem;">
-                <div class="card-body">
-                  <h5 class="card-title text-center mb-3">{{ username }}</h5>
-                  <div class="d-flex align-content-start flex-wrap">
-                    <p class="text-body-secondary">Liked projections:</p>
-                    <div class="container">
-                        <div class="row row-cols-1 row-cols-md-3 g-4">
-                          <ng-container *ngFor="let projection of likes">
-                            <div class="col mb-4">
-                              <img [src]="getProjectionImage(projection)" 
-                                   [alt]="projection.title" 
-                                   (click)="navigateToDetails(projection)" 
-                                   class="img-fluid rounded-start larger-image">
-                            </div>
-                          </ng-container>
-                        </div>
-                        <div *ngIf="likes.length === 0" class="row">
-                          <div class="col">
-                            <p class="text-center">No liked projections found.</p>
-                          </div>
-                        </div>
-                      </div>
+  <div class="border-bottom border-body container d-flex justify-content-between align-items-center ">
+    <h1 class="text-body-secondary">Profile</h1>
+  </div>
+  <div class="d-flex container">
+    <div class="p-2 flex-shrink-1 m-2">
+        <div class="card mt-5 p-2 ps-1" style="width: 20rem;">
+          <div class="card-body">
+            <h5 class="card-title text-center mb-3">{{ username }}</h5>
+            <div class="d-flex align-content-start flex-wrap">
+              <p class="text-body-secondary">Liked projections:</p>
+              <div class="container">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                  <ng-container *ngFor="let projection of likes">
+                    <div class="col mb-4">
+                      <img [src]="getProjectionImage(projection)" 
+                          [alt]="projection.title" 
+                          (click)="navigateToDetails(projection)" 
+                          class="img-fluid rounded-start larger-image">
+                    </div>
+                  </ng-container>
+                </div>
+                  <div *ngIf="likes.length === 0" class="row">
+                    <div class="col">
+                      <p class="text-center">No liked projections found.</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-        </div>
-        <div class="p-2 w-100">
-            <div class="container mt-5 p-2">
-                <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-                    <li [ngbNavItem]="1">
-                        <button ngbNavLink>Future reservations</button>
-                        <ng-template ngbNavContent>
-                            <app-movie-element-profile *ngFor="let reservation of futureReservations" [reservation]="reservation" [active]="active"></app-movie-element-profile>
-                        </ng-template>
-                    </li>
-                    <li [ngbNavItem]="2">
-                        <button ngbNavLink>Past reservations</button>
-                        <ng-template ngbNavContent>
-                            <app-movie-element-profile *ngFor="let reservation of pastReservations" [reservation]="reservation"></app-movie-element-profile>
-                        </ng-template>
-                    </li>
-                </ul>
-                <div [ngbNavOutlet]="nav" class="mt-2"></div>
-                <pre>Active: {{ active }}</pre>
             </div>
+          </div>
         </div>
+      </div>
+      <div class="p-2 w-100">
+        <div class="container mt-5 p-2">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+              <li [ngbNavItem]="1">
+                <button ngbNavLink>Future reservations</button>
+                <ng-template ngbNavContent>
+                <app-movie-element-profile *ngFor="let reservation of futureReservations" [reservation]="reservation" [active]="active" (deleteEvent)="handleDeleteReservation()"></app-movie-element-profile>
+              </ng-template>
+            </li>
+             <li [ngbNavItem]="2">
+            <button ngbNavLink>Past reservations</button>
+            <ng-template ngbNavContent>
+            <app-movie-element-profile *ngFor="let reservation of pastReservations" [reservation]="reservation" (dislikeEvent)="handleDislikeReservation()" (likeEvent)="handleLikeReservation()"></app-movie-element-profile>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        <pre>Active: {{ active }}</pre>
+      </div>
     </div>
+  </div>
 </div>

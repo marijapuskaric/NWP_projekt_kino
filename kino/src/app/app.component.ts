@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './shared/authService';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',

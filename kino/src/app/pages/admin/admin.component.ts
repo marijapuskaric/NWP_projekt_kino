@@ -23,9 +23,13 @@ export class AdminComponent implements OnInit {
   pastProjections: ProjectionModel[] = [];
   role: string;
 
-  constructor(private crudService: CrudService, private authService: AuthService) {}
+  constructor(
+    private crudService: CrudService, 
+    private authService: AuthService
+  ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.loadFutureProjections();
     this.loadPastProjections();
 
@@ -39,7 +43,8 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  loadFutureProjections(): void {
+  loadFutureProjections(): void 
+  {
     this.crudService.getFutureProjections().subscribe(
       (response) => {
         this.futureProjections = response.projections.sort((a, b) => {
@@ -52,7 +57,8 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  loadPastProjections(): void {
+  loadPastProjections(): void 
+  {
     this.crudService.getPastProjections().subscribe(
       (response) => {
         this.pastProjections = response.projections.sort((a, b) => {
@@ -65,7 +71,18 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  openAddProjectionModal(projection?: ProjectionModel): void {
+  openAddProjectionModal(projection?: ProjectionModel): void 
+  {
     this.addProjectionModal.openModal(projection);
+  }
+
+  handleProjectionDeleted(): void 
+  {
+    this.loadFutureProjections();
+  }
+
+  handleAddOrUpdateEvent(): void 
+  {
+    this.loadFutureProjections();
   }
 }

@@ -7,13 +7,14 @@ import { AuthService } from '../../shared/authService';
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
-export class RegisterComponent implements OnInit{
-
+export class RegisterComponent implements OnInit
+{
   registerForm: FormGroup;
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.registerForm = new FormGroup({
       'username': new FormControl('', [Validators.required]),
       'password': new FormControl('', [Validators.required]),
@@ -21,18 +22,18 @@ export class RegisterComponent implements OnInit{
     })
   }
 
-  onSubmit(){
+  onSubmit()
+  {
     if (this.registerForm.value.password == this.registerForm.value.confirmPassword)
-      {
-        this.authService.register(
-          this.registerForm.value.username, 
-          this.registerForm.value.password
-        )
-      }
+    {
+      this.authService.register(
+        this.registerForm.value.username, 
+        this.registerForm.value.password
+      )
+    }
     else
     {
       console.log("Password not confirmed");
     }
   }
-
 }
